@@ -1,4 +1,4 @@
-package com.chunarevsa.website.controllers;
+package com.chunarevsa.Website.controllers;
 
 // копируем с https://spring.io/guides/gs/serving-web-content/
 
