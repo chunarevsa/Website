@@ -30,5 +30,10 @@ public class BlogController {
 		return "blog-main";
 	}
 
+	@GetMapping ("/blog/add")
+	public String blogAdd (Model model) {
+		return "blog-add";
+	}
+
 	
 }
