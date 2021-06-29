@@ -1,5 +1,8 @@
 package com.chunarevsa.Website.controllers;
 
+import java.util.ArrayList;
+import java.util.Optional;
+
 import com.chunarevsa.Website.models.Post;
 import com.chunarevsa.Website.repo.PostRepositry;
 
@@ -7,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -32,10 +36,12 @@ public class BlogController {
 		return "blog-main";
 	}
 
+	
 	@GetMapping ("/blog/add")
 	public String blogAdd (Model model) {
 		return "blog-add";
 	}
+
 
 	 /* Сделаем отслеживание перехода не через GetMapping, 
 	а через post (его мы указывали в blog-add) */
@@ -49,5 +55,26 @@ public class BlogController {
 	}
 
 
+	// Создаём динамическую страничку (при переходе на "Детальнее")
+	@GetMapping ("/blog/{id}") // отслеживание по динамическому параметру (id меняется)
+	public String blogDetails (@PathVariable(value = "id") long id, Model model) {
+		/*  @PathVariable (value = "id") - берём динамическое значение(параметр id) из URL, 
+		long id - создаём параметр  */
+
+		// Добавляем проверку, чтобы не созданные страницы выходили на шаблон
+		if (!postRepositry1.existsById(id)) { // existsById(arg0) - возвращает false если запись была не найдена !
+				return "redirect:/blog"; // Перенаправляем если не найдена
+		}
+		// existsById(arg0) - возвращает true если запись была найдена
+
+
+		// Ищем из базы данных по id и отображаем в шаблоне
+		Optional<Post> post = postRepositry1.findById(id); // ищем конкретный пост и помещаем в объект
+		ArrayList<Post> res = new ArrayList<>();  // Переводим в ArrayList 
+		post.ifPresent(res::add);; // обращаемся к объекту.переводим
+
+		model.addAttribute("post", res);
+		return "blog-details";
+	}
 
 }
