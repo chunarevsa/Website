@@ -16,7 +16,6 @@ public class Post {
 	@GeneratedValue(strategy = GenerationType.AUTO) 
 	// генерирует для новой записи уникальный ид
 	private Long id; // Long потому что статей может огромное кол.
-
 	private String title, anons, full_text;
 	private int views; // добавляем кол. просмотров
 
@@ -62,5 +61,14 @@ public class Post {
 		this.views = views;
 	}
 
+	public Post() { // пустой конструктор который не принимает никаких параметров
+	}
+
+	// Создаём конструтор принимающий 3 параметра
+	public Post(String title, String anons, String full_text) { 
+		this.title = title;
+		this.anons = anons;
+		this.full_text = full_text;
+	}
 	
 }
