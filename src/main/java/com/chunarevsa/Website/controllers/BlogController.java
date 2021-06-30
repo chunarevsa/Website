@@ -77,4 +77,35 @@ public class BlogController {
 		return "blog-details";
 	}
 
+	// Редактирование поста
+	@GetMapping ("/blog/{id}/edit") 
+	public String blogEdit (@PathVariable(value = "id") long id, Model model) {
+		
+		if (!postRepositry1.existsById(id)) { 
+				return "redirect:/blog"; 
+		}
+		Optional<Post> post = postRepositry1.findById(id); 
+		ArrayList<Post> res = new ArrayList<>();  
+		post.ifPresent(res::add);; 
+		model.addAttribute("post", res);
+		return "blog-edit";
+	}
+	@PostMapping("/blog/{id}/edit") 
+	public String blogPostUpdate(@PathVariable(value = "id") long id, @RequestParam String title,  @RequestParam String anons, @RequestParam String full_text, Model model) {
+		 Post post = postRepositry1.findById(id).orElseThrow();	// Создайём объект, обращаемсяк реп.находим по ид.выбрасывает исключение если не найдена
+		 post.setTitle(title); // Переназначаем черз setter
+		 post.setAnons(anons);
+		 post.setFull_text(full_text);
+		 postRepositry1.save(post); // Так как пост уже был создан, мы его перезаписываем
+		return "redirect:/blog";
+	}
+
+	// Удаление поста
+	@PostMapping("/blog/{id}/remove") 
+	public String blogPostDelete(@PathVariable(value = "id") long id, Model model) {
+		 Post post = postRepositry1.findById(id).orElseThrow();	// Создайём объект, обращаемсяк реп.находим по ид.выбрасывает исключение если не найдена
+		 postRepositry1.delete(post); // Удаляем
+		return "redirect:/blog";
+	}
+
 }
